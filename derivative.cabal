@@ -53,11 +53,14 @@ executable derivative
   -- Modules included in this executable, other than Main.
   other-modules: Derivative
   
+
+  ghc-options: -threaded
+
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:    
   
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.10 && <4.11
+  build-depends:       base >=4.10 && <4.11, parallel
   
   -- Directories containing source files.
   hs-source-dirs:      src

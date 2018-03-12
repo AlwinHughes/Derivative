@@ -1,5 +1,7 @@
 module Derivative where
 
+--import Control.Parallel
+
 data Node a = Exp (Node a)| Sin (Node a) | Cos (Node a)| Log (Node a) | Tan (Node a) | Sec (Node a) | Csc (Node a) | Cot (Node a) | Xs a | X | Con a | Add (Node a) (Node a) | Sub (Node a) (Node a) | Mul (Node a) (Node a) | Div (Node a) (Node a) | Pow (Node a) (Node a) deriving Eq 
 
 data Node2 a = X' | Con' a | Add' (Node2 a) (Node2 a) | Sub' (Node2 a) (Node2 a) | Mul' (Node2 a) (Node2 a) | Div' (Node2 a) (Node2 a) | Pow' (Node2 a) (Node2 a) | Com' (Node2 a) (Node2 a) | Exp' | Log' | Sin' | Cos' | Tan' | Sec' | Csc' | Cot'  deriving Eq

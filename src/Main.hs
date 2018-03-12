@@ -3,4 +3,14 @@ module Main where
 import Derivative
 
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = do
+  let f = Tan'
+  {- print $ derivative' f 
+  print $ nThDerivitive' 2 f
+  print $ nThDerivitive' 3 f
+  print $ nThDerivitive' 4 f
+  print $ nThDerivitive' 5 f
+  print $ nThDerivitive' 6 f
+-}
+  print $ nThDerivitive' 7 f
+  
