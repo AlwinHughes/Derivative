@@ -1,6 +1,6 @@
 module Main where
 
-import Derivative
+import Derivativev1
 
 main :: IO ()
 main = do

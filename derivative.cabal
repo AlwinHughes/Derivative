@@ -51,7 +51,7 @@ executable derivative
   main-is:             Main.hs
   
   -- Modules included in this executable, other than Main.
-  other-modules: Derivative
+  other-modules: Derivativev1, Derivativev2
   
 
   ghc-options: -threaded
