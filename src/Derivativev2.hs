@@ -17,7 +17,7 @@ evaluatePSA (n, PowerSeries seq) x = sum $ map (\ m -> seq m * (x -1) ^ m ) [0..
 alt :: Int -> Int
 alt = (^) (-1)
 
-fac :: Int -> Int
+fac :: Integral a => a -> a
 fac 0 = 1
 fac 1 = 1
 fac n = n * fac (n - 1)
@@ -54,7 +54,6 @@ getNodeOrder (Div _ _) = 0
 getNodeOrder (Com _ _) = 1
 getNodeOrder x  = 2
 
-
 (~+) :: Node a -> Node a -> Node a
 (~+) = Add
 
@@ -67,23 +66,26 @@ getNodeOrder x  = 2
 (~/) :: Node a -> Node a -> Node a
 (~/) = Div
 
+(~^) :: Node a -> Node a -> Node a
+(~^) = Pow
+
 derivative :: (Floating a, Eq a) => Node a -> Node a
 derivative (Add n m) = derivative n ~+ derivative m
 derivative (Sub n m) = derivative n ~+ derivative m
 derivative (Mul (Con a) m) = Con a ~* derivative m
 derivative (Mul m (Con a)) = Con a ~* derivative m
-derivative (Mul n m) = (derivative n ~* m) ~+ (derivative m ~* derivative n)
+derivative (Mul n m) = (derivative n ~* m) ~+ (derivative m ~* n)
 derivative (Div n m) = ((derivative n ~* m) ~- (n ~* derivative m)) ~/ ( Pow m (Con 2))
 derivative (Pow n (Con a)) = (derivative n) ~* Con a ~* Pow n (Con (a -1))
 derivative (Pow n m) = derivative $ Com Exp (m ~* Com Log n)
 derivative (Com n m) = Com (derivative n) m ~* derivative m
 derivative (Con n) = Con 0
 derivative Exp = Exp
-derivative Log = Div (Con 1) X
+derivative Log = Pow X (Con (-1))
 derivative Sin = Cos
 derivative Cos = (Con (-1)) ~* Sin
 derivative Tan = Pow Sec (Con 2)
-derivative Sec = Con (-1) ~* Tan ~* Sec
+derivative Sec = Tan ~* Sec
 derivative Csc = Con (-1) ~* Cot ~* Csc
 derivative Cot = Con (-1) ~* (Pow Csc (Con 2))
 derivative X = Con 1
@@ -204,10 +206,13 @@ nThDerivitives i n = n : (nThDerivitives (i -1) n')
     n' = simp $ derivative n
 
 
-nThDerivitive' :: (Floating a, Eq a, Integral b) => b -> Node a -> Node a
+nThDerivitive' :: (Floating a, Eq a, Ord a, Integral b) => b -> Node a -> Node a
 nThDerivitive' 0 n = n
 nThDerivitive' i n = nThDerivitive (i -1) $ derivative n
 
-
+getTaylorPolynomial :: (Floating a, Eq a, Ord a) => Node a -> a -> a -> Int -> Maybe a
+getTaylorPolynomial f a x n = fmap (foldl (\ acc (n,f') -> acc + f' * (x - a)^^n /  fromIntegral (fac n)) 0 ) arr
+  where
+    arr = fmap (zip [0 ..]) $ sequence $ fmap (flip evaluate a) $ nThDerivitives n f 
 
 
